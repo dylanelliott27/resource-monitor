@@ -3,7 +3,10 @@ import java.util.Date;
 import java.util.Properties;
 
 public class DBUtility {
-    // TODO --- JAVADOC COMMENTS
+    /**
+     * Main method to fetch all records in resourcehistory table. All of these methods may be moved/implemented differently as the assignment
+     * moves on and the target is no longer just printing to console. FetchResourceHistory will have a custom query etc
+     */
     public static void fetchResourceHistory() {
         Connection connection = connectToLocalDB();
         PreparedStatement sqlStatement = null;
@@ -18,11 +21,17 @@ public class DBUtility {
         }
     }
 
+    /**
+     * This methods purpose is to split up all functionality for reusability, ex: for each db utility method that needs to call the database,
+     * it can just call this method instead
+     *
+     * @return The connection object that is created from successful db connection
+     */
     private static Connection connectToLocalDB() {
         Connection connection = null;
         try {
             Properties connSettings = new Properties();
-            connSettings.put("user", "root");
+            connSettings.put("user", "root"); // You may need to change this if your local setup is different
             connection = DriverManager.getConnection("JDBC:mysql://localhost:3306/resourcemonitor", connSettings);
         } catch (Exception e) {
             e.printStackTrace();
@@ -30,6 +39,12 @@ public class DBUtility {
         return connection;
     }
 
+    /**
+     * Returns a string of all the column names which gets printed in console in the order that the db results will be shown.
+     *
+     * @param queryResult - The ResultSet from successful db query
+     * @return - A string containing all the column names. Purpose is just for console viewing.
+     */
     private static String parseColumnNames(ResultSet queryResult) {
         String columnNames = "";
         try {
@@ -46,6 +61,11 @@ public class DBUtility {
         return columnNames;
     }
 
+    /**
+     * Concatenates all of the columns for each row into a string, then prints it to console in the same order as the above method.
+     *
+     * @param queryResult - The resultSet from DB query
+     */
     private static void parseAndPrintRowData(ResultSet queryResult) {
         // Will change to return something in future so can be accessed in arrayList or something
         try {
