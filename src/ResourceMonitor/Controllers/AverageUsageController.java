@@ -4,14 +4,21 @@ package ResourceMonitor.Controllers;
 import ResourceMonitor.Models.AverageUsageModel;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -30,9 +37,22 @@ public class AverageUsageController implements Initializable {
     @FXML
     private CategoryAxis resourceTypeAxis;
     @FXML
+    private Button changeButton;
+    @FXML
     private ChoiceBox dateDropdown;
     @FXML
     private NumberAxis usageAxis;
+
+    @FXML
+    private void switchScenes(ActionEvent event) throws Exception{
+        Stage window = (Stage) changeButton.getScene().getWindow();
+        // https://stackoverflow.com/questions/20507591/javafx-location-is-required-even-though-it-is-in-the-same-package
+        Parent tableView = FXMLLoader.load(new File("src/ResourceMonitor/Views/tableView.fxml").toURI().toURL());
+
+        Scene scene = new Scene(tableView);
+        window.setScene(scene);
+        window.show();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

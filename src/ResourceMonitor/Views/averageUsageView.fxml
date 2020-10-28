@@ -15,5 +15,6 @@
           <NumberAxis fx:id="usageAxis" side="LEFT" />
         </yAxis>
       </BarChart>
+      <Button fx:id="changeButton" layoutX="336.0" layoutY="544.0" mnemonicParsing="false" onAction="#switchScenes" text="Table View" />
    </children>
 </AnchorPane>
