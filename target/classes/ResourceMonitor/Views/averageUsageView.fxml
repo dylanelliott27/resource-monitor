@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResourceMonitor.Controllers.AverageUsageController">
+   <children>
+      <ChoiceBox fx:id="dateDropdown" layoutX="287.0" layoutY="65.0" prefWidth="150.0" />
+      <BarChart fx:id="averageUsageChart" layoutX="100.0" layoutY="100.0">
+        <xAxis>
+          <CategoryAxis fx:id="resourceTypeAxis" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="usageAxis" side="LEFT" />
+        </yAxis>
+      </BarChart>
+   </children>
+</AnchorPane>
