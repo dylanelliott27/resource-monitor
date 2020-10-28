@@ -56,6 +56,7 @@ public class AverageUsageController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        System.out.println("first scene");
         initializeUI();
 
         dateDropdown.valueProperty().addListener((observableValue, oldValue, newValue) -> {

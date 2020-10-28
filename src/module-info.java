@@ -8,5 +8,6 @@ module ResourceMonitor {
 
     opens ResourceMonitor.Controllers   ;
     exports ResourceMonitor.Controllers;
+    exports ResourceMonitor.Utilities;
     exports ResourceMonitor;
 }
