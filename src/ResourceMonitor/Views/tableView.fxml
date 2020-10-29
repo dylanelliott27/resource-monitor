@@ -2,10 +2,11 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResourceMonitor.Controllers.TableViewController">
    <children>
-      <Button fx:id="changeScene" layoutX="161.0" layoutY="354.0" mnemonicParsing="false" onAction="#switchScenes" text="Button" />
+      <Button fx:id="changeScene" layoutX="165.0" layoutY="340.0" mnemonicParsing="false" onAction="#switchScenes" text="Graph view" />
       <TableView fx:id="usageTable" layoutX="73.0" layoutY="100.0" prefHeight="200.0" prefWidth="455.0">
         <columns>
           <TableColumn fx:id="dateColumn" prefWidth="117.0" text="Date" />
@@ -14,5 +15,10 @@
             <TableColumn fx:id="hddColumn" prefWidth="108.0" text="HDD" />
         </columns>
       </TableView>
+      <Text layoutX="132.0" layoutY="62.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average Resource Values By DATE!">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

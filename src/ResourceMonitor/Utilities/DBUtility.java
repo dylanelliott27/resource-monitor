@@ -12,14 +12,27 @@ public class DBUtility {
     public static ResultSet fetch(String statement) {
         Connection connection = connectToLocalDB();
         ResultSet results = null;
+        PreparedStatement sqlStatement = null;
 
         try {
-            PreparedStatement sqlStatement  = connection.prepareStatement(statement);
+            sqlStatement  = connection.prepareStatement(statement);
             results = sqlStatement.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        /*finally {
+            try{
+                if(connection != null){
+                    connection.close();
+                }
+                if(sqlStatement != null){
+                    sqlStatement.close();
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }*/
         return results;
     }
 
@@ -42,47 +55,4 @@ public class DBUtility {
         return connection;
     }
 
-    /**
-     * Returns a string of all the column names which gets printed in console in the order that the db results will be shown.
-     *
-     * @param queryResult - The ResultSet from successful db query
-     * @return - A string containing all the column names. Purpose is just for console viewing.
-     */
-    private static String parseColumnNames(ResultSet queryResult) {
-        String columnNames = "";
-        try {
-            ResultSetMetaData metadata = queryResult.getMetaData();
-
-            for (int i = 1; i <= metadata.getColumnCount(); i++) {
-                columnNames += metadata.getColumnName(i) + " ";  // Doing it this way just so it shows best in console
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return columnNames;
-    }
-
-    /**
-     * Concatenates all of the columns for each row into a string, then prints it to console in the same order as the above method.
-     *
-     * @param queryResult - The resultSet from DB query
-     */
-    private static void parseAndPrintRowData(ResultSet queryResult) {
-        // Will change to return something in future so can be accessed in arrayList or something
-        try {
-            while (queryResult.next()) {
-                String logID = queryResult.getString("logid");
-                Date logDate = queryResult.getDate("logdate");
-                int cpuUsage = queryResult.getInt("cpuusage");
-                int hddSpace = queryResult.getInt("hddspace");
-                int ramUsage = queryResult.getInt("ramusage");
-                String operatingSystem = queryResult.getString("operatingsystem");
-                System.out.println(logID + ' ' + logDate + ' ' + cpuUsage + ' ' + hddSpace + ' ' + ramUsage + ' ' + operatingSystem);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

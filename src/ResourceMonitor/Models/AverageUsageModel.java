@@ -37,6 +37,7 @@ public class AverageUsageModel {
     }
 
     public ArrayList<Number> fetchUsageForDate(LocalDate newDate){
+        System.out.println("fetch data");
         ResultSet result = DBUtility.fetch("SELECT AVG(cpuusage) as CPU, AVG(hddspace) as HDD, AVG(ramusage) as RAM from resourcehistory  where logdate = '" + newDate + "' group by logdate;");
         ArrayList<Number> values = new ArrayList<>();
         try{
@@ -59,6 +60,7 @@ public class AverageUsageModel {
         // If the date is in the past, and not today, meaning the values won't change,
         // we can check our "cache" instead for the values, and if for some reason not there, query db
         if(!newDate.isEqual(LocalDate.now())){
+            System.out.println("check cache");
             if(avgValues.containsKey(newDate)){
                 return avgValues.get(newDate);
             }

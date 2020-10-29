@@ -19,6 +19,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -39,15 +41,25 @@ public class AverageUsageController implements Initializable {
     @FXML
     private Button changeButton;
     @FXML
+    private Button realtimeButton;
+    @FXML
     private ChoiceBox dateDropdown;
     @FXML
     private NumberAxis usageAxis;
 
     @FXML
-    private void switchScenes(ActionEvent event) throws Exception{
+    private void switchToTableView() throws Exception{
+        loadView("tableView.fxml");
+    }
+    @FXML
+    private void switchToRealTimeView() throws Exception{
+        loadView("resourceView.fxml");
+    }
+
+    private void loadView(String viewName) throws IOException {
         Stage window = (Stage) changeButton.getScene().getWindow();
         // https://stackoverflow.com/questions/20507591/javafx-location-is-required-even-though-it-is-in-the-same-package
-        Parent tableView = FXMLLoader.load(new File("src/ResourceMonitor/Views/tableView.fxml").toURI().toURL());
+        Parent tableView = FXMLLoader.load(new File("src/ResourceMonitor/Views/" + viewName).toURI().toURL());
 
         Scene scene = new Scene(tableView);
         window.setScene(scene);

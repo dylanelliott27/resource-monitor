@@ -1,5 +1,6 @@
 package ResourceMonitor.Controllers;
 
+import ResourceMonitor.Models.TableViewModel;
 import ResourceMonitor.Utilities.UsageRow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,9 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class TableViewController implements Initializable {
+
+    private TableViewModel model = new TableViewModel();
+
     @FXML
     private Button changeScene;
 
@@ -47,11 +51,8 @@ public class TableViewController implements Initializable {
         cpuColumn.setCellValueFactory(new PropertyValueFactory<>("ramUsage"));
         hddColumn.setCellValueFactory(new PropertyValueFactory<>("hddUsage"));
 
-        ObservableList observableList = FXCollections.observableArrayList(
-                new UsageRow(LocalDate.now(), 25, 30, 20),
-                new UsageRow(LocalDate.now(), 25, 70, 5));
 
-        usageTable.setItems(observableList);
+        usageTable.setItems(model.fetchAllAverageUsage());
     }
     @FXML
     private void switchScenes(ActionEvent event) throws Exception{
