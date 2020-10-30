@@ -1,10 +1,6 @@
 package ResourceMonitor.Controllers;
 
 import ResourceMonitor.Models.TableViewModel;
-import ResourceMonitor.Utilities.UsageRow;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,16 +13,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class TableViewController implements Initializable {
-
-    private TableViewModel model = new TableViewModel();
-
-    @FXML
-    private Button changeScene;
 
     @FXML
     private TableView usageTable;
@@ -45,20 +36,28 @@ public class TableViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        System.out.println("second scene");
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("logDate"));
         ramColumn.setCellValueFactory(new PropertyValueFactory<>("cpuUsage"));
         cpuColumn.setCellValueFactory(new PropertyValueFactory<>("ramUsage"));
         hddColumn.setCellValueFactory(new PropertyValueFactory<>("hddUsage"));
 
 
-        usageTable.setItems(model.fetchAllAverageUsage());
+        usageTable.setItems(TableViewModel.fetchAllAverageUsage());
     }
     @FXML
-    private void switchScenes(ActionEvent event) throws Exception{
-        Stage window = (Stage) changeScene.getScene().getWindow();
+    private void switchToGraphView() throws IOException {
+        loadView("averageUsageView.fxml");
+    }
+    @FXML
+    private void switchToRealTimeView() throws IOException {
+        loadView("resourceView.fxml");
+    }
+    @FXML
+    private void loadView(String viewName) throws IOException {
+        Stage window = (Stage) usageTable.getScene().getWindow(); // we need a reference to the window, to set the scene later
         // https://stackoverflow.com/questions/20507591/javafx-location-is-required-even-though-it-is-in-the-same-package
-        Parent tableView = FXMLLoader.load(new File("src/ResourceMonitor/Views/averageUsageView.fxml").toURI().toURL());
+        // For some reason the views package couldn't be found without new File
+        Parent tableView = FXMLLoader.load(new File("src/ResourceMonitor/Views/" + viewName).toURI().toURL());
 
         Scene scene = new Scene(tableView);
         window.setScene(scene);

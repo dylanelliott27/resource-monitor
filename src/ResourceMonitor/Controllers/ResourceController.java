@@ -6,8 +6,6 @@ import ResourceMonitor.Utilities.DBUtility;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,19 +15,16 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 public class ResourceController implements Initializable {
-    ResourceModel resourceValues = new ResourceModel(0, 0, 0);
+    private ResourceModel resourceValues = new ResourceModel(0, 0, 0);
+    private Timeline updateUI = null;
     @FXML
     private Text cpuValue;
     @FXML
@@ -38,7 +33,8 @@ public class ResourceController implements Initializable {
     private Text hddValue;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Timeline updateUI = new Timeline(new KeyFrame(Duration.seconds(2), actionEvent -> {
+        // Making use of the JavaFX Timeline so I can schedule the OS query for resource values every second
+        updateUI = new Timeline(new KeyFrame(Duration.seconds(1), actionEvent -> {
             getValues(resourceValues);
         }));
 
@@ -47,10 +43,16 @@ public class ResourceController implements Initializable {
     }
     @FXML
     public void switchToTableView() throws IOException {
+        if(updateUI != null){ // stop the Timeline
+            updateUI.stop();
+        }
         loadView("tableView.fxml");
     }
 
     public void switchToGraphView() throws IOException {
+        if(updateUI != null){ // stop the Timeline
+            updateUI.stop();
+        }
         loadView("averageUsageView.fxml");
     }
 
@@ -69,7 +71,6 @@ public class ResourceController implements Initializable {
         int cpu = resourceValues.getCpuValue();
         int ram = resourceValues.getRamValue();
         int hdd = resourceValues.getHddValue();
-        System.out.println("INSERT into resourcehistory (logdate, cpuusage, hddspace, ramusage) VALUES (" + LocalDate.now() + "," + cpu + "," + ram + "," + hdd + ");");
         DBUtility.update("INSERT into resourcehistory (logdate, cpuusage, hddspace, ramusage) VALUES ('" + LocalDate.now().toString() + "' ," + cpu + "," + ram + "," + hdd + ");");
     }
 
@@ -83,7 +84,6 @@ public class ResourceController implements Initializable {
             resourceInstance.setCpuValue((Integer) resourceValues.get("CPU"));
             resourceInstance.setRamValue((Integer) resourceValues.get("Memory"));
             resourceInstance.setHddValue((Integer) resourceValues.get("HDD"));
-            System.out.println(resourceInstance.getCpuValue());
             Platform.runLater(() -> {
                 cpuValue.setText(String.valueOf(resourceInstance.getCpuValue()));
                 ramValue.setText(String.valueOf(resourceInstance.getRamValue()));
