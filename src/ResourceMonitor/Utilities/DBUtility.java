@@ -36,6 +36,33 @@ public class DBUtility {
         return results;
     }
 
+    public static int update(String statement) {
+        Connection connection = connectToLocalDB();
+        int result = 0;
+        PreparedStatement sqlStatement = null;
+
+        try {
+            sqlStatement  = connection.prepareStatement(statement);
+            result = sqlStatement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /*finally {
+            try{
+                if(connection != null){
+                    connection.close();
+                }
+                if(sqlStatement != null){
+                    sqlStatement.close();
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }*/
+        return result;
+    }
+
     /**
      * This methods purpose is to split up all functionality for reusability, ex: for each db utility method that needs to call the database,
      * it can just call this method instead

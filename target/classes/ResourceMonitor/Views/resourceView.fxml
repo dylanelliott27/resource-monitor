@@ -6,9 +6,9 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResourceMonitor.Controllers.ResourceController">
    <children>
-      <Button layoutX="266.0" layoutY="349.0" mnemonicParsing="false" text="Log to DB" />
-      <Button layoutX="59.0" layoutY="349.0" mnemonicParsing="false" text="Graph View" />
-      <Button layoutX="475.0" layoutY="349.0" mnemonicParsing="false" text="Table View" />
+      <Button layoutX="266.0" layoutY="349.0" mnemonicParsing="false" onAction="#logToDB" text="Log to DB" />
+      <Button layoutX="59.0" layoutY="349.0" mnemonicParsing="false" onAction="#switchToGraphView" text="Graph View" />
+      <Button layoutX="475.0" layoutY="349.0" mnemonicParsing="false" onAction="#switchToTableView" text="Table View" />
       <GridPane layoutX="133.0" layoutY="123.0" prefHeight="88.0" prefWidth="334.0">
         <columnConstraints>
           <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="119.0" minWidth="10.0" prefWidth="98.0" />
