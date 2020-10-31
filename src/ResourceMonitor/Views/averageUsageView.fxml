@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResourceMonitor.Controllers.AverageUsageController">
-   <children>
-      <ChoiceBox fx:id="dateDropdown" layoutX="287.0" layoutY="65.0" prefWidth="150.0" />
+<AnchorPane id="background" prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResourceMonitor.Controllers.AverageUsageController">
+    <stylesheets>
+        <URL value="@averageUsage.css" />
+    </stylesheets>
+    <children>
+      <ChoiceBox id="dropdown" fx:id="dateDropdown" layoutX="287.0" layoutY="65.0" prefWidth="150.0" />
       <BarChart fx:id="averageUsageChart" layoutX="100.0" layoutY="100.0">
         <xAxis>
           <CategoryAxis fx:id="resourceTypeAxis" side="BOTTOM" />
@@ -16,12 +20,19 @@
           <NumberAxis fx:id="usageAxis" side="LEFT" />
         </yAxis>
       </BarChart>
-      <Button fx:id="changeButton" layoutX="170.0" layoutY="532.0" mnemonicParsing="false" onAction="#switchToTableView" text="Table View" />
-      <Button fx:id="realtimeButton" layoutX="450.0" layoutY="532.0" mnemonicParsing="false" onAction="#switchToRealTimeView" text="Realtime Graph" />
-      <Text layoutX="160.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average Resource Values by date!">
+      <Button id="changeButton" fx:id="changeButton" layoutX="160.0" layoutY="532.0" lineSpacing="2.0" mnemonicParsing="false" onAction="#switchToTableView" prefHeight="32.0" prefWidth="124.0" text="Table View">
+         <font>
+            <Font name="Droid Sans" size="15.0" />
+         </font></Button>
+      <Button id="realtimeButton" fx:id="realtimeButton" layoutX="437.0" layoutY="532.0" mnemonicParsing="false" onAction="#switchToRealTimeView" prefHeight="32.0" prefWidth="150.0" text="Realtime Monitor">
+         <font>
+            <Font name="Droid Sans" size="15.0" />
+         </font></Button>
+      <Text fill="#3c3c3c" layoutX="160.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Average Resource Values by date!">
          <font>
             <Font size="27.0" />
          </font>
       </Text>
    </children>
+
 </AnchorPane>

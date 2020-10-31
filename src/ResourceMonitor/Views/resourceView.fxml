@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ResourceMonitor.Controllers.ResourceController">
-   <children>
+    <stylesheets>
+        <URL value="@averageUsage.css" />
+    </stylesheets>
+    <children>
       <Button layoutX="266.0" layoutY="349.0" mnemonicParsing="false" onAction="#logToDB" text="Log to DB" />
       <Button layoutX="59.0" layoutY="349.0" mnemonicParsing="false" onAction="#switchToGraphView" text="Graph View" />
       <Button layoutX="475.0" layoutY="349.0" mnemonicParsing="false" onAction="#switchToTableView" text="Table View" />
@@ -35,13 +39,19 @@
                   <Font size="32.0" />
                </font>
             </Text>
-            <Text fx:id="cpuValue" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" GridPane.rowIndex="1">
+            <Text id="valueLabel" fx:id="cpuValue" strokeType="OUTSIDE" strokeWidth="0.0" text="LOADING" GridPane.rowIndex="1">
                <font>
-                  <Font size="23.0" />
+                  <Font size="20.0" />
                </font>
             </Text>
-            <Text fx:id="ramValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Text fx:id="hddValue" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Text id="valueLabel" fx:id="ramValue" strokeType="OUTSIDE" strokeWidth="0.0" text="LOADING" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="20.0" />
+               </font></Text>
+            <Text id="valueLabel" fx:id="hddValue" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="valueLabel" text="LOADING" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <font>
+                  <Font size="20.0" />
+               </font></Text>
          </children>
       </GridPane>
    </children>

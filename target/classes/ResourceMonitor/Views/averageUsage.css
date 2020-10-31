@@ -1,0 +1,38 @@
+#changeButton{
+    -fx-background-color: #3e69d7;
+    -fx-text-fill: white;
+}
+
+#realtimeButton{
+    -fx-background-color: #3e69d7;
+    -fx-text-fill: white;
+}
+
+.default-color0.chart-bar { -fx-bar-fill: #3e69d7 }
+
+
+#dropdown{
+    -fx-background-color: white;
+    -fx-border-color: #3e69d7;
+    -fx-border-width: 1.5 1.5 1.5 1.5;
+    -fx-border-radius: 5px;
+}
+.button{
+    -fx-background-color: #3e69d7;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-family: "Droid Sans";
+}
+
+#valueLabel{
+    -fx-fill: #3e69d7;
+}
+
+.table-view .column-header,
+.table-view .column-header-background{
+    -fx-background-color: #3e69d7;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+}

@@ -13,7 +13,7 @@ public class DBUtility {
         // or my return would be null. CachedRowSet seemed to be the solution. Basically a "disconnected" rowset data structure
         RowSetFactory factory = null;
         CachedRowSet finalResults = null;
-        Connection connection = connectToLocalDB();
+        Connection connection = connectToDB();
         ResultSet results = null;
         PreparedStatement sqlStatement = null;
 
@@ -46,7 +46,7 @@ public class DBUtility {
     }
 
     public static int update(String statement) {
-        Connection connection = connectToLocalDB();
+        Connection connection = connectToDB();
         int result = 0;
         PreparedStatement sqlStatement = null;
 
@@ -72,19 +72,13 @@ public class DBUtility {
         return result;
     }
 
-    /**
-     * This methods purpose is to split up all functionality for reusability, ex: for each db utility method that needs to call the database,
-     * it can just call this method instead
-     *
-     * @return The connection object that is created from successful db connection
-     */
-    private static Connection connectToLocalDB() {
+    private static Connection connectToDB() {
         Connection connection = null;
         try {
             Properties connSettings = new Properties();
-            connSettings.put("user", "root"); // You may need to change this if your local setup is different
-            connSettings.put("password", "root");
-            connection = DriverManager.getConnection("JDBC:mysql://localhost:3306/resourcemonitor", connSettings);
+            connSettings.put("user", "dylan");
+            connSettings.put("password", "assignment1");
+            connection = DriverManager.getConnection("JDBC:mysql://134.122.18.58:3306/resourcemonitor", connSettings);
         } catch (Exception e) {
             e.printStackTrace();
         }

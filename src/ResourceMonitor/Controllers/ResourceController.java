@@ -76,7 +76,7 @@ public class ResourceController implements Initializable {
 
     public void getValues(ResourceModel resourceInstance){
         CommandUtility command = new CommandUtility();
-        // One of the commands to query the OS for CPU percentage takes like 1.2 seconds...
+        // One of the commands to query the OS for CPU percentage takes like 2 seconds...
         // Because of that, it blocks the javaFX UI.. so I have to use a separate thread
         // then update the UI in Platform.runLater(), which executes on the application(javafx) thread
         new Thread(() -> {
@@ -85,9 +85,9 @@ public class ResourceController implements Initializable {
             resourceInstance.setRamValue((Integer) resourceValues.get("Memory"));
             resourceInstance.setHddValue((Integer) resourceValues.get("HDD"));
             Platform.runLater(() -> {
-                cpuValue.setText(String.valueOf(resourceInstance.getCpuValue()));
-                ramValue.setText(String.valueOf(resourceInstance.getRamValue()));
-                hddValue.setText(String.valueOf(resourceInstance.getHddValue()));
+                cpuValue.setText(resourceInstance.getCpuValue() + "%");
+                ramValue.setText(resourceInstance.getRamValue() + "%");
+                hddValue.setText(resourceInstance.getHddValue() + "%");
             });
             return; // Close thread
         }).start();
