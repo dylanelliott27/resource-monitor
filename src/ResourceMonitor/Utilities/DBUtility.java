@@ -1,26 +1,32 @@
 package ResourceMonitor.Utilities;
 
 import java.sql.*;
-import java.util.Date;
 import java.util.Properties;
+import javax.sql.rowset.*;
+
 
 public class DBUtility {
-    /**
-     * Main method to fetch all records in resourcehistory table. All of these methods may be moved/implemented differently as the assignment
-     * moves on and the target is no longer just printing to console. FetchResourceHistory will have a custom query etc
-     */
-    public static ResultSet fetch(String statement) {
+
+    public static CachedRowSet fetch(String statement) {
+        // https://docs.oracle.com/javase/7/docs/api/javax/sql/rowset/CachedRowSet.html
+        // Realized I was originally returning a resultset, and because of that, I couldn't close the connection after executing,
+        // or my return would be null. CachedRowSet seemed to be the solution. Basically a "disconnected" rowset data structure
+        RowSetFactory factory = null;
+        CachedRowSet finalResults = null;
         Connection connection = connectToLocalDB();
         ResultSet results = null;
         PreparedStatement sqlStatement = null;
 
         try {
+            factory = RowSetProvider.newFactory();
+            finalResults = factory.createCachedRowSet();
             sqlStatement  = connection.prepareStatement(statement);
             results = sqlStatement.executeQuery();
+            finalResults.populate(results);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*finally {
+        finally {
             try{
                 if(connection != null){
                     connection.close();
@@ -28,12 +34,15 @@ public class DBUtility {
                 if(sqlStatement != null){
                     sqlStatement.close();
                 }
+                if(results != null){
+                    results.close();
+                }
             }
             catch(Exception e){
                 e.printStackTrace();
             }
-        }*/
-        return results;
+        }
+        return finalResults;
     }
 
     public static int update(String statement) {
@@ -47,7 +56,7 @@ public class DBUtility {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        /*finally {
+        finally {
             try{
                 if(connection != null){
                     connection.close();
@@ -59,7 +68,7 @@ public class DBUtility {
             catch(Exception e){
                 e.printStackTrace();
             }
-        }*/
+        }
         return result;
     }
 

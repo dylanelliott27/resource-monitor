@@ -5,6 +5,7 @@ module ResourceMonitor {
     requires javafx.graphics;
     requires java.sql;
     requires javafx.fxml;
+    requires java.sql.rowset;
 
     opens ResourceMonitor.Controllers   ;
     exports ResourceMonitor.Controllers;

@@ -1,6 +1,7 @@
 package ResourceMonitor.Controllers;
 
 import ResourceMonitor.Models.AverageUsageModel;
+import ResourceMonitor.Utilities.DBUtility;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,9 +15,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 
+import javax.sql.rowset.CachedRowSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -66,7 +70,7 @@ public class AverageUsageController implements Initializable {
 
     public void initializeUI(){
         // TODO:: MOVE DB METHODS TO CONTROLLER
-        ArrayList<AverageUsageModel> graphValues = AverageUsageModel.fetchAverageValues();
+        ArrayList<AverageUsageModel> graphValues = fetchAverageValues();
 
         graphValues.forEach((valueObj) -> {
             // Add each Model instance to the dropdown, where it's toString method will be represented
@@ -102,4 +106,25 @@ public class AverageUsageController implements Initializable {
         usageSeries.getData().add(new XYChart.Data("RAM", newDate.getRamUsage()));
         usageSeries.getData().add(new XYChart.Data("HDD", newDate.getHddUsage()));
     }
+
+    public static ArrayList fetchAverageValues(){
+        CachedRowSet result = DBUtility.fetch("SELECT logdate, AVG(cpuusage) as CPU, AVG(hddspace) as HDD, AVG(ramusage) as RAM from resourcehistory group by logdate;");
+        ArrayList values = new ArrayList();
+
+        try{
+            while (result.next()) {
+                LocalDate logDate = result.getDate("logdate").toLocalDate();
+                double cpuUsage = result.getDouble("CPU");
+                double ramUsage = result.getDouble("RAM");
+                double hddUsage = result.getDouble("HDD");
+                // Not sure if I should be showing double values or not, so cast to int for now
+                values.add(new AverageUsageModel(logDate, (int) cpuUsage, (int) ramUsage, (int) hddUsage));
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return values;
+    }
+
 }

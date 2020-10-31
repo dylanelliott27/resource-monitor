@@ -1,6 +1,9 @@
 package ResourceMonitor.Controllers;
 
 import ResourceMonitor.Models.TableViewModel;
+import ResourceMonitor.Utilities.DBUtility;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,9 +15,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import javax.sql.rowset.CachedRowSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class TableViewController implements Initializable {
@@ -42,7 +48,7 @@ public class TableViewController implements Initializable {
         hddColumn.setCellValueFactory(new PropertyValueFactory<>("hddUsage"));
 
 
-        usageTable.setItems(TableViewModel.fetchAllAverageUsage());
+        usageTable.setItems(fetchAllAverageUsage());
     }
     @FXML
     private void switchToGraphView() throws IOException {
@@ -62,5 +68,25 @@ public class TableViewController implements Initializable {
         Scene scene = new Scene(tableView);
         window.setScene(scene);
         window.show();
+    }
+
+    public static ObservableList fetchAllAverageUsage(){
+        CachedRowSet results = DBUtility.fetch("SELECT logdate, AVG(cpuusage) as CPU, AVG(hddspace) as HDD, AVG(ramusage) as RAM from resourcehistory group by logdate;");
+        ObservableList data = FXCollections.observableArrayList();
+
+        try{
+            while(results.next()){
+                LocalDate logDate = results.getDate("logdate").toLocalDate();
+                double cpuUsage = results.getDouble("CPU");
+                double ramUsage = results.getDouble("HDD");
+                double hddUsage = results.getDouble("RAM");
+
+                data.add(new TableViewModel(logDate, (int) cpuUsage, (int) ramUsage, (int) hddUsage));
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return data;
     }
 }

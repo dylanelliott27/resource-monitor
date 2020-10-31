@@ -1,11 +1,8 @@
 package ResourceMonitor.Models;
 
-import ResourceMonitor.Utilities.DBUtility;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import java.sql.ResultSet;
+
 import java.time.LocalDate;
-// TODO VALIDATION and move method to controller
+
 public class TableViewModel {
     private LocalDate logDate;
     private int cpuUsage;
@@ -13,10 +10,10 @@ public class TableViewModel {
     private int hddUsage;
 
     public TableViewModel(LocalDate logDate, int cpuUsage, int ramUsage, int hddUsage) {
-        this.logDate = logDate;
-        this.cpuUsage = cpuUsage;
-        this.ramUsage = ramUsage;
-        this.hddUsage = hddUsage;
+        setLogDate(logDate);
+        setCpuUsage(cpuUsage);
+        setRamUsage(ramUsage);
+        setHddUsage(hddUsage);
     }
 
     public LocalDate getLogDate() {
@@ -24,6 +21,16 @@ public class TableViewModel {
     }
 
     public void setLogDate(LocalDate logDate) {
+        LocalDate minDate = LocalDate.parse("2020-01-01");
+        LocalDate maxDate = LocalDate.parse("2030-01-01"); // As if this app will be around for 10 years
+
+        if(logDate.isBefore(minDate)){
+            throw new IllegalArgumentException("Date must be after 2020-01-01");
+        }
+
+        if(logDate.isAfter(maxDate)){
+            throw new IllegalArgumentException("Date must be after 2030-01-01");
+        }
         this.logDate = logDate;
     }
 
@@ -32,6 +39,12 @@ public class TableViewModel {
     }
 
     public void setCpuUsage(int cpuUsage) {
+        if(cpuUsage < 0){
+            throw new IllegalArgumentException("CPU Usage must not be a negative number (less than 0)");
+        }
+        if(cpuUsage > 100){
+            throw new IllegalArgumentException("CPU usage must not be greater than 100");
+        }
         this.cpuUsage = cpuUsage;
     }
 
@@ -40,6 +53,12 @@ public class TableViewModel {
     }
 
     public void setRamUsage(int ramUsage) {
+        if(ramUsage < 0){
+            throw new IllegalArgumentException("RAM Usage must not be a negative number (less than 0)");
+        }
+        if(ramUsage > 100){
+            throw new IllegalArgumentException("RAM usage must not be greater than 100");
+        }
         this.ramUsage = ramUsage;
     }
 
@@ -48,26 +67,12 @@ public class TableViewModel {
     }
 
     public void setHddUsage(int hddUsage) {
+        if(hddUsage < 0){
+            throw new IllegalArgumentException("HDD Usage must not be a negative number (less than 0)");
+        }
+        if(hddUsage > 100){
+            throw new IllegalArgumentException("HDD usage must not be greater than 100");
+        }
         this.hddUsage = hddUsage;
-    }
-
-    public static ObservableList fetchAllAverageUsage(){
-        ResultSet results = DBUtility.fetch("SELECT logdate, AVG(cpuusage) as CPU, AVG(hddspace) as HDD, AVG(ramusage) as RAM from resourcehistory group by logdate;");
-        ObservableList data = FXCollections.observableArrayList();
-
-        try{
-            while(results.next()){
-                LocalDate logDate = results.getDate("logdate").toLocalDate();
-                int cpuUsage = results.getInt("CPU");
-                int ramUsage = results.getInt("HDD");
-                int hddUsage = results.getInt("RAM");
-
-                data.add(new TableViewModel(logDate, cpuUsage, ramUsage, hddUsage));
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return data;
     }
 }
