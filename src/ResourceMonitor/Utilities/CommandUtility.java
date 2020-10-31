@@ -2,12 +2,18 @@ package ResourceMonitor.Utilities;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CommandUtility {
     private HashMap<String, Long> finalValues = new HashMap();
 
+    /**
+     * Uses the java Process class to execute a windows CMD command to retrieve multiple system resource values (using WMIC)
+     * Of course, ONLY WORKS ON WINDOWS
+     * Utilizes a very basic parser (as each header and value is sent in different lines) to map the proper header and value
+     * together in a hashmap (finalValues)
+     * @return = A hashmap containing the property name (ex: totalphysicalmemory) and value for each system resource
+     */
     public HashMap<String, Number> getAllValues(){
         String currentBlock = null;
         String currentLine = null;
@@ -44,6 +50,14 @@ public class CommandUtility {
         return parseValues();
     }
 
+    /**
+     * Once the hashmap is returned from the getAllValues method, we need to parse all the values, because the OS
+     * queries return in BYTES, and we also need to calculate percentages, as the queries aren't specific,
+     * ex: the queries return TotalPhysicalMemory and FreePhysicalMemory. We will need to subtract them to determine
+     * how much is actually currently UTILIZED, then get the percentage value of that
+     * @return = A hashmap containing the property and value for each resource, but the value being the integer value of
+     * the actual PERCENTAGE utilized
+     */
     public HashMap<String, Number> parseValues(){
         HashMap<String, Number> resourceValues = new HashMap();
 

@@ -19,14 +19,13 @@ import javax.sql.rowset.CachedRowSet;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class AverageUsageController implements Initializable {
 
-    XYChart.Series usageSeries = new XYChart.Series();
+    XYChart.Series<String, Number> usageSeries = new XYChart.Series<>();
     @FXML
     private BarChart averageUsageChart;
     @FXML
@@ -38,15 +37,30 @@ public class AverageUsageController implements Initializable {
     @FXML
     private ChoiceBox<AverageUsageModel> dateDropdown;
 
+    /**
+     * Changes scenes to the tableView scene
+     * @throws Exception = file not found/error
+     */
     @FXML
     private void switchToTableView() throws Exception{
         loadView("tableView.fxml");
     }
+
+    /**
+     * Changes scenes to the realtimeview scene
+     * @throws Exception = file not found/error
+     */
     @FXML
     private void switchToRealTimeView() throws Exception{
         loadView("resourceView.fxml");
     }
 
+    /**
+     * Accepts the filename of the view you would like to load, then changes the scene to it using a reference to the window
+     * created from any element on the current scene
+     * @param viewName = The filename of the view located in the Views folder
+     * @throws IOException = if file not found
+     */
     private void loadView(String viewName) throws IOException {
         // Eventually move this method to a utility class as it is re-used in all three controllers
         Stage window = (Stage) changeButton.getScene().getWindow(); // we need reference to window, to change scene with
@@ -58,6 +72,12 @@ public class AverageUsageController implements Initializable {
         window.show();
     }
 
+    /**
+     * Initializer for this scene. Fetches bargraph data from DB then displays it. Also adds a listener for the dropdown
+     * so that when the value changes, the UI displays the new date's values.
+     * @param url = javafx
+     * @param resourceBundle = javafx
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeUI();
@@ -68,8 +88,12 @@ public class AverageUsageController implements Initializable {
 
     }
 
+    /**
+     * Parses through an arraylist of AverageUsageModel instances, firstly adding all the dates to the dropdown,
+     * then constructing the chart info (labels, legend), and lastly adding the data for the selected dropdown date
+     * (which is the last on initialization) and displays it in the chart.
+     */
     public void initializeUI(){
-        // TODO:: MOVE DB METHODS TO CONTROLLER
         ArrayList<AverageUsageModel> graphValues = fetchAverageValues();
 
         graphValues.forEach((valueObj) -> {
@@ -91,25 +115,35 @@ public class AverageUsageController implements Initializable {
         usageAxis.setLabel("Average percentage/load amount");
 
         usageSeries.setName("Average Resource load %");
-        usageSeries.getData().add(new XYChart.Data("CPU", cpuUsage));
-        usageSeries.getData().add(new XYChart.Data("RAM", ramUsage));
-        usageSeries.getData().add(new XYChart.Data("HDD", hddUsage));
+        usageSeries.getData().add(new XYChart.Data<>("CPU", cpuUsage));
+        usageSeries.getData().add(new XYChart.Data<>("RAM", ramUsage));
+        usageSeries.getData().add(new XYChart.Data<>("HDD", hddUsage));
 
         averageUsageChart.getData().addAll(usageSeries);
 
     }
 
+    /**
+     * This method is called whenever the dropdown value changes ( a new date is selected ).
+     * Clears all the data in the chart, then sets the data to the instance variables of the new date's instance.
+     * @param newDate = The instance of the newly selected date in the dropdown
+     */
     public void updateBarGraph(AverageUsageModel newDate){
         // Set the bar graph values to those of the selected instance in the dropdown
         usageSeries.getData().clear();
-        usageSeries.getData().add(new XYChart.Data("CPU", newDate.getCpuUsage()));
-        usageSeries.getData().add(new XYChart.Data("RAM", newDate.getRamUsage()));
-        usageSeries.getData().add(new XYChart.Data("HDD", newDate.getHddUsage()));
+        usageSeries.getData().add(new XYChart.Data<>("CPU", newDate.getCpuUsage()));
+        usageSeries.getData().add(new XYChart.Data<>("RAM", newDate.getRamUsage()));
+        usageSeries.getData().add(new XYChart.Data<>("HDD", newDate.getHddUsage()));
     }
 
-    public static ArrayList fetchAverageValues(){
+    /**
+     * Grabs an average of all the values for each date, then parses each row returned into a model instance,
+     * which is then added to an arraylist of models.
+     * @return = Arraylist of model instances for each date
+     */
+    public static ArrayList<AverageUsageModel> fetchAverageValues(){
         CachedRowSet result = DBUtility.fetch("SELECT logdate, AVG(cpuusage) as CPU, AVG(hddspace) as HDD, AVG(ramusage) as RAM from resourcehistory group by logdate;");
-        ArrayList values = new ArrayList();
+        ArrayList<AverageUsageModel> values = new ArrayList<>();
 
         try{
             while (result.next()) {
