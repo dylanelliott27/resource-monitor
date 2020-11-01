@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 public class TableViewController implements Initializable {
 
     @FXML
-    private TableView<ObservableList<TableViewModel>> usageTable;
+    private TableView<TableViewModel> usageTable;
 
     @FXML
     private TableColumn<String, LocalDate> dateColumn;
@@ -95,9 +95,9 @@ public class TableViewController implements Initializable {
      * Queries the DB for the average values of cpu, ram, and hdd for each date. Each row is parsed into a valid tableViewModel instance
      * @return = Observable list of all tableviewmodel instances for each date
      */
-    public static ObservableList fetchAllAverageUsage(){
+    public static ObservableList<TableViewModel> fetchAllAverageUsage(){
         CachedRowSet results = DBUtility.fetch("SELECT logdate, AVG(cpuusage) as CPU, AVG(hddspace) as HDD, AVG(ramusage) as RAM from resourcehistory group by logdate;");
-        ObservableList data = FXCollections.observableArrayList();
+        ObservableList<TableViewModel> data = FXCollections.observableArrayList();
 
         try{
             while(results.next()){

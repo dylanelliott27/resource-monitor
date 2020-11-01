@@ -30,12 +30,13 @@ public class JsonParser {
         HashMap<String, String> jsonValues = new HashMap();
 
         try{
-            HttpURLConnection jsonAPI = (HttpURLConnection) new URL("http://localhost:3000").openConnection();
+            HttpURLConnection jsonAPI = (HttpURLConnection) new URL("http://134.122.18.58:8000").openConnection();
 
             if(jsonAPI.getResponseCode() == 200){
                 BufferedReader input = new BufferedReader(new InputStreamReader(jsonAPI.getInputStream()));
 
                 while((jsonString = input.readLine()) != null){
+                    System.out.println("Received from my API: " + jsonString);
                     parts = jsonString.split(",");
                 }
 
@@ -52,6 +53,7 @@ public class JsonParser {
                     String[] keyValue = parts[i].split(":");
                     jsonValues.put(keyValue[0], keyValue[1]);
                 }
+                System.out.println("The JSON values in hashmap: " + jsonValues);
                 // Since everything is stored as a string, we need to parse it to it's correct type
                 LocalDate logDate = LocalDate.parse(jsonValues.get("logdate"));
                 int cpuUsage = Integer.parseInt(jsonValues.get("cpuusage"));
@@ -72,6 +74,7 @@ public class JsonParser {
      */
     public static void constructSQL(AverageUsageModel model){
         String sql = "INSERT into resourcehistory(logdate, cpuusage, hddspace, ramusage) values ('" + model.getLogDate() + "'," + model.getCpuUsage() + "," + model.getHddUsage() + "," + model.getRamUsage() + ");";
+        System.out.println("The JSON as a valid SQL insert: " + sql);
         DBUtility.update(sql);
     }
 }
